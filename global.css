@@ -68,8 +68,8 @@ input, button, select, textarea {
   color: var(--as-text) !important;
   border-left: var(--as-border-accent) !important;
   padding-left: 14px !important;
-  margin-bottom: 22px;
-  line-height: 1.2;
+  margin-bottom: 22px !important;
+  line-height: 1.2 !important;
 }
 
 h1:not([class]) {
