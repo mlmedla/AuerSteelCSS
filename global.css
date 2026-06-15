@@ -61,13 +61,13 @@ input, button, select, textarea {
 }
 
 [data-widget="Basic/PageTitle"] h1 {
-  font-size: clamp(1.6rem, 3vw, 2rem);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .045em;
-  color: var(--as-text);
-  border-left: var(--as-border-accent);
-  padding-left: 14px;
+  font-size: clamp(1.6rem, 3vw, 2rem) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .045em !important;
+  color: var(--as-text) !important;
+  border-left: var(--as-border-accent) !important;
+  padding-left: 14px !important;
   margin-bottom: 22px;
   line-height: 1.2;
 }
