@@ -1,18 +1,26 @@
+/* ================================================================
+   2. CSS VARIABLES — change brand tokens here, updates everywhere
+   ================================================================ */
 
 :root {
-  --as-red:        #cc1f36;   
-  --as-red-dark:   #a8192d;   
+  --as-red:        #cc1f36;   /* ← primary brand red — unified from sandbox 2026-06-12 (was #cc2222 in v2.1) */
+  --as-red-dark:   #a8192d;   /* ← hover/darker red  */
   --as-black:      #1a1a1a;
-  --as-text:       #231f20;   
+  --as-text:       #231f20;   /* matches platform body text exactly */
   --as-gray-light: #e5e5e5;
   --as-gray-mid:   #555;
   --as-gray-text:  #ddd;
   --as-gold:       #f5a623;
   --as-font:           "Open Sans", sans-serif;
-  --as-font-condensed: "Open Sans Condensed", sans-serif;  
+  --as-font-condensed: "Open Sans Condensed", sans-serif;  /* ← marketing/hero headlines — wght 300 (light) or 700 (bold) */
   --as-radius:     4px;
   --as-border-accent: 4px solid var(--as-red);
 }
+
+
+/* ================================================================
+   3. FONT STACK
+   ================================================================ */
 
 body,
 h1, h2, h3, h4, h5, h6,
@@ -21,6 +29,28 @@ input, button, select, textarea {
   font-family: var(--as-font);
 }
 
+
+/* ================================================================
+   4. CONTENT ZONE — [data-test-selector="flexZone_0"]
+   Added 2026-06-12 from sandbox Style Guide head injection.
+   Updated 2026-06-12: REMOVED auto-heading border treatment.
+
+   IMPORTANT: flexZone_0 is present on almost every page.
+   Auto-applying border-left to all h1/h2/h3 inside it was styling
+   headings on pages that should stay plain (product detail, contact, etc.)
+
+   HEADING TREATMENT IS NOW OPT-IN:
+     - Add class="as-section-heading" to any h2 in HTML view for the
+       red border-left treatment.
+     - [data-widget="Basic/PageTitle"] h1 handles branded page titles
+       (see Section 6).
+     - Use .as-page-title on any other h1 that needs the brand style.
+
+   This section only sets body-copy styles (paragraph, links) which
+   are safe to apply broadly.
+   ================================================================ */
+
+/* Body copy styles — safe to apply across all pages */
 [data-test-selector="flexZone_0"] p {
   font-size: 15px;
   line-height: 1.7;
@@ -39,6 +69,19 @@ input, button, select, textarea {
 [data-test-selector="flexZone_0"] a:hover {
   border-bottom-color: var(--as-red);
 }
+
+
+/* ================================================================
+   5. BREADCRUMB RESET
+   Added 2026-06-12 from sandbox Style Guide head injection.
+
+   CRITICAL: The heading styles in Section 4 would otherwise add
+   border-left and padding to breadcrumb <a> and <span> elements.
+   This reset cancels those inherited styles specifically for the
+   breadcrumb trail.
+
+   Targets the Opti CC breadcrumb data-test-selector.
+   ================================================================ */
 
 [data-test-selector="pageBreadcrumbs"],
 [data-test-selector="pageBreadcrumbs"] a,
@@ -60,18 +103,41 @@ input, button, select, textarea {
   border-bottom: none !important;
 }
 
+
+/* ================================================================
+   6. FALLBACK HEADING UTILITIES
+   Verified against live cart page 2026-06-09.
+
+   STRATEGY — these catch headings OUTSIDE flexZone_0:
+   h1:not([class]) and h2:not([class]) pick up any plain CMS-authored
+   heading that isn't inside the main content zone.
+   Platform widget headings always have auto-generated hashed classes,
+   so the :not([class]) guard leaves them untouched.
+
+   If a heading is inside flexZone_0, Section 4 rules take precedence
+   (they are more specific). These are the safety net for edge cases.
+
+   You CAN also add class="as-section-heading" or "as-page-title"
+   manually in Opti HTML view for finer control.
+   ================================================================ */
+
+/* Cart/content page titles — h1 inside Basic/PageTitle widget has
+   styled-component classes so h1:not([class]) never matches it.
+   This rule targets it directly via the stable data-widget anchor. */
 [data-widget="Basic/PageTitle"] h1 {
-  font-size: clamp(1.6rem, 3vw, 2rem) !important;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
-  letter-spacing: .045em !important;
-  color: var(--as-text) !important;
-  border-left: var(--as-border-accent) !important;
-  padding-left: 14px !important;
-  margin-bottom: 22px !important;
-  line-height: 1.2 !important;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .045em;
+  color: var(--as-text);
+  border-left: var(--as-border-accent);
+  padding-left: 14px;
+  margin-bottom: 22px;
+  line-height: 1.2;
 }
 
+/* Auto-style ALL unclassed h1s — CMS page titles (Rebate Center, etc.)
+   Matches "CART" heading: 32px, weight 600, red left bar */
 h1:not([class]) {
   font-size: clamp(1.6rem, 3vw, 2rem);
   font-weight: 600;
@@ -84,6 +150,8 @@ h1:not([class]) {
   line-height: 1.2;
 }
 
+/* Auto-style ALL unclassed h2s — CMS section headings (State Programs, etc.)
+   Matches "ORDER SUMMARY" / "PROMOTIONS": 21px, weight 800, red left bar */
 h2:not([class]) {
   font-size: 1.3rem;
   font-weight: 800;
@@ -96,6 +164,7 @@ h2:not([class]) {
   line-height: 2;
 }
 
+/* Manual class versions — for when you need the style on a classed element */
 .as-page-title {
   font-size: clamp(1.6rem, 3vw, 2rem);
   font-weight: 600;
@@ -131,6 +200,11 @@ h2:not([class]) {
   text-transform: uppercase;
 }
 
+
+/* ================================================================
+   5. PRODUCT CARDS — hover lift
+   ================================================================ */
+
 [class*="productContainer"],
 [class*="productCard"],
 [class*="ProductGridItem"] {
@@ -146,6 +220,23 @@ h2:not([class]) {
   position: relative;
 }
 
+
+/* ================================================================
+   6. BUTTONS + ICONS
+
+   Add to Cart — icon auto-injected via ::before
+   Use .as-cta and .as-cta-outline for custom CMS buttons.
+
+   HOW TO USE IN OPTI rich text (HTML view):
+     <a href="/products" class="as-cta">
+       <i class="fa-solid fa-cart-plus"></i> Shop Now
+     </a>
+     <a href="#" class="as-cta-outline">
+       <i class="fa-solid fa-print"></i> Print Quote
+     </a>
+   ================================================================ */
+
+/* Platform Add to Cart button — icon injected automatically */
 button[class*="addToCart"],
 button[class*="AddToCart"] {
   background-color: var(--as-red) !important;
@@ -153,7 +244,7 @@ button[class*="AddToCart"] {
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: .06em !important;
-  border-radius: 3px !important;
+  /* border-radius: removed — Style Guide handles Rectangle (0) at platform level */
 }
 
 button[class*="addToCart"]:hover,
@@ -165,27 +256,30 @@ button[class*="addToCart"]::before,
 button[class*="AddToCart"]::before {
   font-family: "Font Awesome 6 Free";
   font-weight: 900;
-  content: "\f217";   
+  content: "\f217";   /* fa-cart-plus */
   margin-right: 6px;
 }
 
+/* Print button (if class or aria-label contains "print") */
 button[class*="print"]::before,
 [aria-label*="Print"]::before,
 [aria-label*="print"]::before {
   font-family: "Font Awesome 6 Free";
   font-weight: 900;
-  content: "\f02f";   
+  content: "\f02f";   /* fa-print */
   margin-right: 6px;
 }
 
+/* Delivery / Shipping button */
 button[class*="elivery"]::before,
 a[class*="elivery"][class*="cta"]::before {
   font-family: "Font Awesome 6 Free";
   font-weight: 900;
-  content: "\f0d1";   
+  content: "\f0d1";   /* fa-truck */
   margin-right: 6px;
 }
 
+/* CTA Buttons — use in Opti content blocks */
 .as-cta {
   display: inline-flex;
   align-items: center;
@@ -197,7 +291,7 @@ a[class*="elivery"][class*="cta"]::before {
   text-transform: uppercase;
   letter-spacing: .06em;
   padding: 12px 28px;
-  border-radius: 3px;
+  border-radius: 0; /* Rectangle — matches Style Guide */
   border: none;
   cursor: pointer;
   text-decoration: none;
@@ -219,7 +313,7 @@ a[class*="elivery"][class*="cta"]::before {
   font-size: .9rem;
   text-transform: uppercase;
   padding: 11px 27px;
-  border-radius: 3px;
+  border-radius: 0; /* Rectangle — matches Style Guide */
   border: 2px solid var(--as-red);
   cursor: pointer;
   text-decoration: none;
@@ -231,11 +325,14 @@ a[class*="elivery"][class*="cta"]::before {
   color: #fff;
 }
 
+/* Icon spacing inside any button */
 .as-cta i,
 .as-cta-outline i {
   font-size: .85em;
 }
 
+/* Secondary / ghost actions (Save for Later, Add to List, Remove) */
+/* Use on cart line items and product cards for tertiary actions     */
 .as-btn-secondary {
   display: inline-flex;
   align-items: center;
@@ -261,6 +358,7 @@ a[class*="elivery"][class*="cta"]::before {
 }
 .as-btn-secondary i { font-size: .85em; }
 
+/* Text-only micro-action (e.g., "Remove" under a cart item) */
 .as-btn-text {
   display: inline-flex;
   align-items: center;
@@ -281,6 +379,26 @@ a[class*="elivery"][class*="cta"]::before {
 .as-btn-text:hover { color: var(--as-red); }
 .as-btn-text i { font-size: .85em; }
 
+
+/* ================================================================
+   7. CART SIDEBAR — SECTION HEADINGS
+   ================================================================ */
+/*
+   Opti CC renders ALL widget class names as styled-component hashes.
+   Selectors like [class*="Promotions"] / [class*="OrderSummary"] hit
+   ZERO elements — confirmed via DOM inspection June 2026.
+
+   Stable selectors:
+     data-widget="Basic/RichContent"      → Promotions, Shipping or
+                                            Pickup?, Order Summary titles
+     data-widget="Common/ProductCarousel" → Cross Sells title
+     .wrapper h2                          → the H2 inside each widget
+
+   NOTE: "Order Summary" renders as a plain text node (no H2) inside
+   a Basic/RichContent widget. Edit that widget and wrap the text in
+   <h2>Order Summary</h2> to pick up the styling below.
+*/
+
 [data-widget="Basic/RichContent"] .wrapper h2,
 [data-widget="Common/ProductCarousel"] .wrapper h2 {
   font-family: var(--as-font);
@@ -295,12 +413,30 @@ a[class*="elivery"][class*="cta"]::before {
   line-height: 1.2;
 }
 
+
+/* ================================================================
+   8. CROSS-SELL / "ADD & SAVE" CAROUSEL
+   ================================================================ */
+/*
+   ⚠️ NEEDS AUDIT — June 2026:
+   All [class*="crossSell"] / [class*="CrossSell"] selectors below
+   hit ZERO elements. Opti CC uses hashed styled-component classes.
+   The Cross Sells heading is handled by section 7 above via:
+     [data-widget="Common/ProductCarousel"] .wrapper h2
+
+   TODO: Inspect the live carousel DOM and replace all [class*="..."]
+   selectors with [data-widget="Common/ProductCarousel"] scoped rules.
+   The product card, price, and button classes need to be re-identified.
+   ================================================================ */
+
+/* Container */
 div[class*="crossSell"],
 div[class*="CrossSell"] {
   margin: 20px 0;
   font-family: var(--as-font);
 }
 
+/* Red header bar — matches .cab-header */
 h2[class*="crossSell"],
 h2[class*="CrossSell"] {
   background: var(--as-red) !important;
@@ -316,6 +452,7 @@ h2[class*="CrossSell"] {
   margin-bottom: 0 !important;
 }
 
+/* White body panel below the header */
 div[class*="crossSell"] > div,
 div[class*="CrossSell"] > div {
   background: #fff;
@@ -324,6 +461,7 @@ div[class*="CrossSell"] > div {
   padding: 16px;
 }
 
+/* Individual product cards — matches .cab-card */
 div[class*="crossSell"] [class*="productCard"],
 div[class*="crossSell"] [class*="ProductCard"],
 div[class*="crossSell"] [class*="ProductGridItem"],
@@ -349,6 +487,7 @@ div[class*="CrossSell"] [class*="productContainer"]:hover {
   transform: none !important;
 }
 
+/* Brand label — matches .cab-brand */
 div[class*="crossSell"] [class*="brandName"],
 div[class*="crossSell"] [class*="manufacturerName"],
 div[class*="CrossSell"] [class*="brandName"],
@@ -360,6 +499,7 @@ div[class*="CrossSell"] [class*="manufacturerName"] {
   color: var(--as-red) !important;
 }
 
+/* Product name — matches .cab-name */
 div[class*="crossSell"] [class*="productName"],
 div[class*="crossSell"] [class*="ProductName"],
 div[class*="CrossSell"] [class*="productName"],
@@ -371,6 +511,7 @@ div[class*="CrossSell"] [class*="ProductName"] {
   text-transform: uppercase !important;
 }
 
+/* Add to Cart — outline style matching .cab-add-btn */
 div[class*="crossSell"] button[class*="addToCart"],
 div[class*="crossSell"] button[class*="AddToCart"],
 div[class*="CrossSell"] button[class*="addToCart"],
@@ -395,12 +536,22 @@ div[class*="CrossSell"] button[class*="AddToCart"]:hover {
   color: #fff !important;
 }
 
+/* Suppress global ::before cart icon — outline button doesn't use it */
 div[class*="crossSell"] button[class*="addToCart"]::before,
 div[class*="crossSell"] button[class*="AddToCart"]::before,
 div[class*="CrossSell"] button[class*="addToCart"]::before,
 div[class*="CrossSell"] button[class*="AddToCart"]::before {
   display: none;
 }
+
+
+/* ================================================================
+   9. CART — QTY INPUTS
+   ================================================================ */
+/*
+   [class*="qtyInput"] / [class*="QuantityInput"] hit ZERO elements.
+   Qty inputs render as input[type="number"] inside Cart/CartLines.
+*/
 
 [data-widget="Cart/CartLines"] input[type="number"] {
   border: 2px solid #ccc;
@@ -415,6 +566,14 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   outline: none;
 }
 
+
+/* ================================================================
+   11. CAROUSEL — PRODUCT SLIDES  (Common/ProductCarousel)
+   Stable: data-test-selector attributes (never hashed).
+   Applies to cross-sells on cart AND top-sellers on category pages.
+   ================================================================ */
+
+/* Individual slide card — subtle frame, red top stripe on hover */
 [data-widget="Common/ProductCarousel"] [data-test-selector="carousel_slide"] {
   background: #f9f9f9;
   border: 1px solid var(--as-gray-light);
@@ -428,6 +587,7 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   box-shadow: 0 4px 16px rgba(0, 0, 0, .09);
 }
 
+/* Brand name — muted uppercase label */
 [data-widget="Common/ProductCarousel"] [data-test-selector="brandLink"] {
   font-size: .625rem;
   font-weight: 700;
@@ -442,6 +602,7 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   text-decoration: none;
 }
 
+/* Product name — dark, bold */
 [data-widget="Common/ProductCarousel"] [data-test-selector="productDescriptionLink"] {
   font-size: .8125rem;
   font-weight: 700;
@@ -455,6 +616,7 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   text-decoration: none;
 }
 
+/* QTY input — match cart page style */
 [data-widget="Common/ProductCarousel"] [data-test-selector="product_qtyOrdered"] {
   border: 2px solid #ccc;
   border-radius: 3px;
@@ -466,6 +628,7 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   outline: none;
 }
 
+/* Prev / Next nav arrows */
 [data-widget="Common/ProductCarousel"] [data-test-selector="prevBtn"],
 [data-widget="Common/ProductCarousel"] [data-test-selector="nextBtn"] {
   background: var(--as-text);
@@ -482,6 +645,20 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   opacity: 1;
 }
 
+
+/* ================================================================
+   10. CART — LINE ITEMS & ACTION BUTTONS
+   Stable selectors via data-test-selector attributes (not hashed):
+     brandLink                   — brand name ("Carrier")
+     productDescriptionLink      — product name link
+     cartlineHeader_removeAll    — "Remove All" button
+     availabilityByWarehouseLink — "View Availability by Warehouse"
+     cartline_removeLine         — ✕ remove item button
+   "Add to List" / "Add Line Notes" have no data-test-selector —
+   targeted via button[type="submit"] with exclusion chain.
+   ================================================================ */
+
+/* Brand name (e.g. "Carrier") — muted uppercase label */
 [data-widget="Cart/CartLines"] [data-test-selector="brandLink"] {
   font-size: .6875rem;
   font-weight: 700;
@@ -495,6 +672,7 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   text-decoration: none;
 }
 
+/* Product name link — dark, bold */
 [data-widget="Cart/CartLines"] [data-test-selector="productDescriptionLink"] {
   font-weight: 700;
   color: var(--as-text);
@@ -505,6 +683,7 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   text-decoration: none;
 }
 
+/* Ghost action buttons: View Availability, Add to List, Add Line Notes */
 [data-widget="Cart/CartLines"] button[type="submit"]:not([data-test-selector="cartlineHeader_removeAll"]):not([data-test-selector="cartline_removeLine"]) {
   color: var(--as-gray-mid);
   font-size: .75rem;
@@ -514,6 +693,7 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   color: var(--as-red);
 }
 
+/* "Remove All" — muted, uppercase, destructive on hover */
 [data-widget="Cart/CartLines"] [data-test-selector="cartlineHeader_removeAll"] {
   font-size: .75rem;
   font-family: var(--as-font);
@@ -526,6 +706,7 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   color: var(--as-red);
 }
 
+/* ✕ Remove item icon button */
 [data-widget="Cart/CartLines"] [data-test-selector="cartline_removeLine"] {
   color: var(--as-gray-mid);
   border-color: var(--as-gray-light);
@@ -536,6 +717,33 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   border-color: var(--as-red);
 }
 
+
+/* ================================================================
+   12. CART FULFILLMENT METHOD SELECTOR (Ship or Pick Up)
+   Widget: Cart/CartFulfillmentMethodSelector
+   Confirmed via DOM inspection 2026-06-15.
+
+   SELECTOR MAP:
+     widgetWrapper                   → the content area
+     cartFulfillmentMethod           → fieldset (Ship / Pick Up)
+     cartFulfillmentMethod legend    → "Fulfillment Method" label
+     fulfillmentMethod_ship          → Ship radio input
+     fulfillmentMethod_pickUp        → Pick Up radio input
+     cartFulfillmentMethod > div     → individual radio+label wrappers
+     cartFulfillmentMethod label     → "Ship" / "Pick Up" labels
+     cart_pickUpLocation             → pick-up address block
+     cart_pickUpLocation_findLocation → "Change" button
+     cart_warehouseName              → branch name
+     addressInfoDisplay              → address <address> element
+     addressInfoDisplay_phoneNumber  → phone number
+
+   APPROACH:
+     - Visually hide radio inputs; style labels as a pill toggle
+     - :checked + label → red fill (brand active state)
+     - Pick-up location block → clean address card
+   ================================================================ */
+
+/* Card wrapper */
 [data-widget="Cart/CartFulfillmentMethodSelector"] [data-test-selector="widgetWrapper"] {
   background: #fff;
   border: 1px solid var(--as-gray-light);
@@ -544,6 +752,7 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   padding: 16px;
 }
 
+/* Legend — "Fulfillment Method" */
 [data-test-selector="cartFulfillmentMethod"] legend {
   font-size: 10px;
   font-weight: 700;
@@ -556,12 +765,14 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   width: 100%;
 }
 
+/* Fieldset reset */
 [data-test-selector="cartFulfillmentMethod"] {
   border: none;
   padding: 0;
   margin: 0 0 14px 0;
 }
 
+/* Visually hide the actual radio inputs */
 [data-test-selector="fulfillmentMethod_ship"],
 [data-test-selector="fulfillmentMethod_pickUp"] {
   position: absolute;
@@ -571,10 +782,12 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   pointer-events: none;
 }
 
+/* Radio wrapper divs — inline so pills sit side by side */
 [data-test-selector="cartFulfillmentMethod"] > div {
   display: inline-block;
 }
 
+/* Labels as pill toggle buttons */
 [data-test-selector="cartFulfillmentMethod"] label {
   display: inline-block;
   padding: 7px 22px;
@@ -590,16 +803,19 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   user-select: none;
 }
 
+/* Left pill (Ship) */
 [data-test-selector="fulfillmentMethod_ship"] + label {
   border-radius: var(--as-radius) 0 0 var(--as-radius);
   border-right-width: 1px;
 }
 
+/* Right pill (Pick Up) */
 [data-test-selector="fulfillmentMethod_pickUp"] + label {
   border-radius: 0 var(--as-radius) var(--as-radius) 0;
   border-left-width: 1px;
 }
 
+/* Active/checked state */
 [data-test-selector="fulfillmentMethod_ship"]:checked + label,
 [data-test-selector="fulfillmentMethod_pickUp"]:checked + label {
   background: var(--as-red);
@@ -609,12 +825,14 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   z-index: 1;
 }
 
+/* Hover on unselected pill */
 [data-test-selector="fulfillmentMethod_ship"]:not(:checked) + label:hover,
 [data-test-selector="fulfillmentMethod_pickUp"]:not(:checked) + label:hover {
   background: var(--as-gray-light);
   color: var(--as-text);
 }
 
+/* Pick-up location section */
 [data-test-selector="cart_pickUpLocation"] {
   padding-top: 14px;
   border-top: 1px solid var(--as-gray-light);
@@ -624,6 +842,7 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   gap: 4px 12px;
 }
 
+/* Warehouse / branch name */
 [data-test-selector="cart_warehouseName"] {
   font-weight: 700;
   font-size: .875rem;
@@ -632,6 +851,7 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   width: 100%;
 }
 
+/* Address block */
 [data-test-selector="addressInfoDisplay"] {
   font-size: .8rem;
   color: var(--as-gray-mid);
@@ -645,6 +865,7 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   display: block;
 }
 
+/* "Change" button — ghost style */
 [data-test-selector="cart_pickUpLocation_findLocation"] {
   font-size: .72rem;
   font-weight: 600;
@@ -668,10 +889,51 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   border-color: var(--as-red);
 }
 
+
+/* ================================================================
+   13. ONE PAGE CHECKOUT
+   Confirmed selectors via DOM inspection 2026-06-15.
+
+   WIDGET MAP:
+     OnePageCheckout/OnePageCheckoutDeliveryMethod
+       deliveryMethod_editButton         → "Edit" link
+       onePageCheckout_fulfillmentMethod → fulfillment summary text
+
+     OnePageCheckout/OnePageCheckoutShippingSection
+       shippingAndBillingSection         → address wrapper
+       addressInfoDisplay                → address <address> (×2)
+       editPickupShippingAddressButton   → "Edit" button
+       BillingAddress                    → billing block
+
+     OnePageCheckout/OnePageCheckoutPaymentDetails
+       paymentDetailHeader               → h2 "Payment"
+       paymentMethodName                 → "COD"
+
+     OnePageCheckout/OnePageCheckoutReviewAndPlaceOrder
+       onePageCheckoutReviewAndPlaceOrder_header → section heading
+       cartTotal_subTotal / _shippingAndHandlingAmount /
+       _totalTaxDisplay / _orderGrandTotalDisplay → line items
+       checkoutReviewAndSubmit_signUpForNewsletters → newsletter checkbox
+       checkoutReviewAndSubmit_placeOrder → Place Order button
+
+     OnePageCheckout/OnePageCheckoutOrderSummary
+       cartTotal_current → sidebar totals block
+
+   DESIGN APPROACH:
+     - Each section = white card with 3px red top border
+     - Section headings = small 10px uppercase label (consistent with cart)
+     - Edit buttons = ghost style (matches cart Change button)
+     - Place Order = full-width bold red CTA (dominant action)
+     - Order Summary sidebar = sticky, card treatment
+     - Auto-numbered sections via CSS counter
+   ================================================================ */
+
+/* Step counter on the left column sections */
 [data-widget="OnePageCheckout/OnePageCheckoutPageContainer"] {
   counter-reset: checkout-step;
 }
 
+/* Shared card treatment for all checkout sections */
 [data-widget="OnePageCheckout/OnePageCheckoutDeliveryMethod"] [data-test-selector="widgetWrapper"],
 [data-widget="OnePageCheckout/OnePageCheckoutShippingSection"] [data-test-selector="widgetWrapper"],
 [data-widget="OnePageCheckout/OnePageCheckoutPaymentDetails"] [data-test-selector="widgetWrapper"],
@@ -684,6 +946,8 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   margin-bottom: 16px;
   position: relative;
 }
+
+/* ── Delivery Method ─────────────────────── */
 
 [data-widget="OnePageCheckout/OnePageCheckoutDeliveryMethod"] [data-test-selector="widgetWrapper"]::before {
   counter-increment: checkout-step;
@@ -703,6 +967,8 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   color: var(--as-text);
   margin: 0;
 }
+
+/* ── Shipping / Address Section ──────────── */
 
 [data-widget="OnePageCheckout/OnePageCheckoutShippingSection"] [data-test-selector="widgetWrapper"]::before {
   counter-increment: checkout-step;
@@ -742,6 +1008,8 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   display: block;
 }
 
+/* ── Payment Details ─────────────────────── */
+
 [data-widget="OnePageCheckout/OnePageCheckoutPaymentDetails"] [data-test-selector="widgetWrapper"]::before {
   counter-increment: checkout-step;
   content: counter(checkout-step) ". Payment";
@@ -755,7 +1023,7 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
 }
 
 [data-test-selector="paymentDetailHeader"] {
-  display: none; 
+  display: none; /* replaced by ::before counter label */
 }
 
 [data-test-selector="paymentMethodName"] {
@@ -763,6 +1031,8 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   font-weight: 600;
   color: var(--as-text);
 }
+
+/* ── Review & Place Order ────────────────── */
 
 [data-widget="OnePageCheckout/OnePageCheckoutReviewAndPlaceOrder"] [data-test-selector="widgetWrapper"]::before {
   counter-increment: checkout-step;
@@ -777,9 +1047,10 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
 }
 
 [data-test-selector="onePageCheckoutReviewAndPlaceOrder_header"] {
-  display: none; 
+  display: none; /* replaced by ::before counter label */
 }
 
+/* Totals in the review section */
 [data-widget="OnePageCheckout/OnePageCheckoutReviewAndPlaceOrder"] [data-test-selector="cartTotal_current"] {
   border-top: 1px solid var(--as-gray-light);
   padding-top: 12px;
@@ -787,6 +1058,7 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   font-size: .875rem;
 }
 
+/* Newsletter checkbox */
 [data-test-selector="checkoutReviewAndSubmit_signUpForNewsletters"] {
   font-size: .8rem;
   color: var(--as-gray-mid);
@@ -796,6 +1068,7 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   gap: 8px;
 }
 
+/* Place Order — dominant red CTA */
 [data-test-selector="checkoutReviewAndSubmit_placeOrder"] {
   width: 100%;
   padding: 14px 0;
@@ -817,6 +1090,8 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
 [data-test-selector="checkoutReviewAndSubmit_placeOrder"]:hover {
   background: var(--as-red-dark);
 }
+
+/* ── Order Summary Sidebar ───────────────── */
 
 [data-widget="OnePageCheckout/OnePageCheckoutOrderSummary"] [data-test-selector="widgetWrapper"] {
   background: #fff;
@@ -856,11 +1131,28 @@ div[class*="CrossSell"] button[class*="AddToCart"]::before {
   justify-content: space-between;
 }
 
+/* ── Shared Edit Buttons ─────────────────────────────────────────────
+   3-tier selector strategy (most → least specific):
+   Tier 1 — data-test-selector: preferred; Opti CC provides these on SOME
+             buttons. Always add here first when a test selector exists.
+   Tier 2 — widget-scoped button: for BUTTON elements with no test selector;
+             scope to the widget so we don't over-apply.
+   Tier 3 — href-based: for link-type (<a>) edit buttons with no test selector
+             that navigate back to /Cart (e.g. Order Summary "Edit").
+   If a future widget adds a new unstyled edit button:
+     - If it has a data-test-selector → add to Tier 1
+     - If it's a <button> → add widget scope to Tier 2
+     - If it's an <a href="/Cart"> → Tier 3 covers it automatically
+   ──────────────────────────────────────────────────────────────────── */
+
+/* Tier 1: named buttons (data-test-selector exists) */
 [data-test-selector="deliveryMethod_editButton"],
 [data-test-selector="editPickupShippingAddressButton"],
 
+/* Tier 2: unnamed button in Shipping Section (Pick Up Address edit) */
 [data-widget="OnePageCheckout/OnePageCheckoutShippingSection"] button:not([data-test-selector]),
 
+/* Tier 3: unnamed /Cart link without a test selector (Order Summary edit) */
 a[href="/Cart"]:not([data-test-selector]) {
   font-size: .72rem !important;
   font-weight: 600 !important;
@@ -888,6 +1180,23 @@ a[href="/Cart"]:not([data-test-selector]):hover {
   text-decoration: none;
 }
 
+
+/* ================================================================
+   14. PRODUCT IMAGE STABILIZATION
+   Locks images to a consistent size so they don't jump around.
+
+   WHY: Product images come from the PIM at different dimensions
+   (some portrait, some landscape, some tiny). Without fixed height +
+   object-fit, cards stack at different heights and the grid looks broken.
+
+   Targets:
+     - Carousel slides (Common/ProductCarousel)
+     - Cart line items (Cart/CartLines)
+     - General product images via data-test-selector="productImage"
+       (used on category pages, search results, product detail)
+   ================================================================ */
+
+/* Carousel — fixed image box, centered + contained */
 [data-widget="Common/ProductCarousel"] [data-test-selector="carousel_slide"] img {
   display: block;
   width: 100%;
@@ -897,6 +1206,7 @@ a[href="/Cart"]:not([data-test-selector]):hover {
   background: #fff;
 }
 
+/* Cart line items — small thumbnail, fixed square */
 [data-widget="Cart/CartLines"] img {
   width: 80px;
   height: 80px;
@@ -906,6 +1216,7 @@ a[href="/Cart"]:not([data-test-selector]):hover {
   flex-shrink: 0;
 }
 
+/* Category / search / product grids — consistent card image height */
 [data-test-selector="productImage"] {
   display: block;
   width: 100%;
@@ -914,6 +1225,18 @@ a[href="/Cart"]:not([data-test-selector]):hover {
   object-position: center;
   background: #fff;
 }
+
+
+/* ================================================================
+   13. PAGE LAYOUT UTILITIES
+   Use these in Opti content blocks (HTML view) to build pages
+   without needing a developer.
+
+   Two naming conventions — both are live, use either:
+     .as-*    (v2.1)   as-card, as-cta, as-two-col, as-hero, as-icon-row
+     .auer-*  (v2.2)   auer-tip-card, auer-stats-bar, auer-cta-band,
+                       auer-section-label
+   ================================================================ */
 
 .as-page-template {
   max-width: 1200px;
@@ -938,7 +1261,7 @@ a[href="/Cart"]:not([data-test-selector]):hover {
   text-transform: uppercase;
   margin-bottom: 12px;
   color: #fff;
-  border-left: none; 
+  border-left: none; /* override section heading if nested */
   padding-left: 0;
 }
 
@@ -992,6 +1315,7 @@ a[href="/Cart"]:not([data-test-selector]):hover {
   line-height: 1.55;
 }
 
+/* Icon callout row — use inside as-card or as-hero */
 .as-icon-row {
   display: flex;
   align-items: center;
@@ -1007,6 +1331,112 @@ a[href="/Cart"]:not([data-test-selector]):hover {
   flex-shrink: 0;
 }
 
+
+/* ================================================================
+   PROMO BANNER — .as-promo-banner
+   Use in CMS HTML view. Two-column: content left, image right.
+   Add .as-promo-banner-light for white/gray variant (dark is default).
+
+   HOW TO USE:
+     <div class="as-promo-banner as-promo-banner-light">
+       <div class="as-promo-banner-content">
+         <span class="auer-section-label">Eyebrow</span>
+         <h2>Headline</h2>
+         <p>Supporting copy.</p>
+         <a href="/url" class="as-cta">CTA</a>
+       </div>
+       <div class="as-promo-banner-img">
+         <img src="..." alt="...">
+       </div>
+     </div>
+   ================================================================ */
+
+.as-promo-banner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--as-black);
+  overflow: hidden;
+  position: relative;
+}
+
+.as-promo-banner::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--as-red);
+}
+
+.as-promo-banner-content {
+  padding: 40px 36px 40px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+}
+
+.as-promo-banner-content h2 {
+  font-size: 26px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  line-height: 1.1;
+  font-family: var(--as-font);
+  border: none !important;
+  padding: 0 !important;
+}
+
+.as-promo-banner-content p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
+  font-family: var(--as-font);
+  margin: 0;
+}
+
+.as-promo-banner-img {
+  min-height: 220px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2a2a2a;
+}
+
+.as-promo-banner-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Light / gray variant */
+.as-promo-banner-light {
+  background: #f4f4f4;
+}
+
+.as-promo-banner-light .as-promo-banner-content h2 {
+  color: var(--as-text);
+}
+
+.as-promo-banner-light .as-promo-banner-content p {
+  color: var(--as-gray-mid);
+}
+
+.as-promo-banner-light .as-promo-banner-img {
+  background: var(--as-gray-light);
+}
+
+@media (max-width: 600px) {
+  .as-promo-banner { grid-template-columns: 1fr; }
+  .as-promo-banner-img { min-height: 180px; }
+}
+
+
+/* --- .auer-* utility classes (from sandbox Style Guide, added v2.2) --- */
+
+/* Eyebrow label above a heading */
 .auer-section-label {
   font-size: 11px;
   font-weight: 700;
@@ -1017,6 +1447,7 @@ a[href="/Cart"]:not([data-test-selector]):hover {
   display: block;
 }
 
+/* Content card with red left accent — use in CMS rich text HTML view */
 .auer-tip-card {
   background: #f4f4f4;
   border-left: 4px solid var(--as-red);
@@ -1028,6 +1459,7 @@ a[href="/Cart"]:not([data-test-selector]):hover {
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
 }
 
+/* Full-width red stats bar — wrap stat figures in this */
 .auer-stats-bar {
   background: var(--as-red);
   color: #fff;
@@ -1037,6 +1469,7 @@ a[href="/Cart"]:not([data-test-selector]):hover {
   flex-wrap: wrap;
 }
 
+/* Dark full-width CTA band — for section-ending calls to action */
 .auer-cta-band {
   background: #231f20;
   padding: 52px 40px;
@@ -1054,6 +1487,11 @@ a[href="/Cart"]:not([data-test-selector]):hover {
   color: #ccc;
 }
 
+
+/* ================================================================
+   13. BRAND LOGO GRID — uniform sizing
+   ================================================================ */
+
 .byvJpL {
   flex-basis: 16.6667% !important;
   max-width: 16.6667% !important;
@@ -1066,6 +1504,23 @@ a[href="/Cart"]:not([data-test-selector]):hover {
   max-height: 100px !important;
   object-fit: contain !important;
 }
+
+
+/* ================================================================
+   14. TOP SELLERS WIDGET
+
+   ⚠️  HASHED CLASSES — verified 2026-06-09
+   These will break if Opti/platform rebuilds the component.
+   If Top Sellers layout breaks after a deploy, inspect the element
+   and update the class names below to match the new hashes.
+
+   Hashes verified:
+     Wrapper:     .kjxXpx
+     Qty col:     .gGxeCB
+     Info col:    .clCkDk
+     Input:       .bPGNOa
+     Qty pad:     .jQOKMz
+   ================================================================ */
 
 .kjxXpx .wrapper {
   background: transparent !important;
@@ -1098,6 +1553,11 @@ a[href="/Cart"]:not([data-test-selector]):hover {
 .kjxXpx .gGxeCB .jQOKMz {
   padding: 0 !important;
 }
+
+
+/* ================================================================
+   15. RESPONSIVE OVERRIDES
+   ================================================================ */
 
 @media (max-width: 1024px) {
   .as-two-col {
